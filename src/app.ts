@@ -1,6 +1,12 @@
 import Laney from "./Laney.js";
 import Lane from "./lane.js";
 import LaneNumber from "./laneNumber.js";
+
+
+const gameLaney = new Laney();
+const lane = new Lane();
+const laneNumber = new LaneNumber();
+
 const lanes: number = 3;
 
 let laney: Laney;

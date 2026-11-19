@@ -1,30 +1,43 @@
+import LaneNumber from "./laneNumber.js";
+
 export default class Lane {
 
   private total: number;
 
-  private addNumber: number;
+  private busted: boolean;
 
-  private isBusted: boolean;
-
-  /**
-   * creates laneNumber
-   *
-   */
   public constructor() {
     this.total = 0;
-    this.addNumber = 1;
-    this.isBusted = false;
+    this.busted = false;
   }
+
+  /**
+   *
+   * adds and limit numbers
+   */
+
+  public addNumber(number: LaneNumber): void {
+    this.total = this.total + number.getValue();
+
+    if (this.total > 70) {
+      this.busted = true;
+    }
+  }
+
+  /**
+   *
+   * return total number
+   */
 
   public getTotal(): number {
-    for (let i = 0; i < getTotal.length; i++) {
-      return;
-    }
+    return this.total;
   }
 
+  /**
+   *
+   * return checks if its over 70
+   */
   public isBusted(): boolean {
-    if (this.getTotal > 70) {
-      return true;
-    }
+      return this.busted;
   }
 }

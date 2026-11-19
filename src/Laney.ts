@@ -1,6 +1,26 @@
-export default class Laney {
-  public constructor(numberOfLanes: number = 3) {
+import Lane from "./lane.js";
+import LaneNumber from "./laneNumber.js";
 
+export default class Laney {
+
+  private busted: boolean;
+
+  private lanes: Lane[];
+
+  private nextNumbers: LaneNumber[];
+
+  public constructor(numberOfLanes: number = 3) {
+    this.busted = false;
+
+    this.lanes = [];
+    for (let i = 0; i < numberOfLanes; i++) {
+      this.lanes.push(new Lane());
+    }
+
+    this.nextNumbers = [];
+    for (let i = 0; i < 3; i++) {
+      this.nextNumbers.push(new LaneNumber());
+    }
   }
 
   /**
@@ -10,7 +30,14 @@ export default class Laney {
    * @returns void
    */
   public placeNumberInLane(laneIndex: number): void {
+    if (this.busted) {
+      return;
+    }
+    const next = this.nextNumbers[0];
 
+    this.nextNumbers.splice(0, 1);
+    this.lanes[laneIndex].addNumber(next);
+    this.nextNumbers.push(new LaneNumber());
   }
 
   /**
@@ -19,8 +46,31 @@ export default class Laney {
    * @returns string
    */
   public getMessage(): string {
-    return "You busted! Start a new game?";
+
+    this.busted = false;
+    for (let i = 0; i < this.lanes.length; i++) {
+      if (this.lanes[i].isBusted()) {
+        this.busted = true;
+      }
+    }
+    if (this.busted) {
+      return "You busted! Start a new game?";
+    }
+
+    let message = "Next numbers are: ";
+    for (let i = 0; i < this.nextNumbers.length; i++) {
+      if (i > 0) {
+        message = message + ", ";
+      }
+      if (this.nextNumbers[i].isSecret()) {
+        message = message + "?";
+      } else {
+        message = message + this.nextNumbers[i].getValue();
+      }
+    }
+    return message;
   }
+
 
   /**
    * Returns the total score for the specified lane.
@@ -28,7 +78,7 @@ export default class Laney {
    * @returns number
    */
   public getLaneTotal(laneIndex: number): number {
-    return 0;
+    return this.lanes[laneIndex].getTotal();
   }
 
   /**
@@ -36,7 +86,11 @@ export default class Laney {
    * @returns number
    */
   public getTotal(): number {
-    return 0;
+    let total = 0;
+    for (let i = 0; i < this.lanes.length; i++) {
+      total = total + this.lanes[i].getTotal();
+    }
+    return total;
   }
 
   /**
@@ -44,6 +98,6 @@ export default class Laney {
    * @returns boolean
    */
   public isBusted(): boolean {
-    return false;
+    return this.busted;
   }
 }
